@@ -1,0 +1,4 @@
+# Netlify redirects file
+# Redirect www to non-www
+https://www.zen-ai.eu/* https://zen-ai.eu/:splat 301!
+
