@@ -1,0 +1,73 @@
+# GitHub Actions CI/CD Pipeline for ZenAI
+# Automatically deploys to Netlify on push to main branch
+
+name: Deploy to Netlify
+
+# Trigger on push to main branch
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  # Build and Deploy Job
+  deploy:
+    name: Build & Deploy
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Step 2: Validate HTML (optional quality check)
+      - name: Validate HTML
+        uses: Cyb3r-Jak3/html5validator-action@v7.2.0
+        with:
+          root: .
+          css: true
+        continue-on-error: true  # Don't fail the build on warnings
+
+      # Step 3: Deploy to Netlify
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v3.0
+        with:
+          publish-dir: '.'
+          production-branch: main
+          production-deploy: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: "Deploy from GitHub Actions - ${{ github.event.head_commit.message }}"
+          enable-pull-request-comment: true
+          enable-commit-comment: true
+          overwrites-pull-request-comment: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        timeout-minutes: 5
+
+  # Lighthouse Performance Audit (runs after deploy)
+  lighthouse:
+    name: Lighthouse Audit
+    needs: deploy
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Wait for Netlify Deploy
+        run: sleep 30  # Give Netlify time to finish deployment
+
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v11
+        with:
+          urls: |
+            https://zen-ai.eu/
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+        continue-on-error: true  # Don't fail build on performance issues
+

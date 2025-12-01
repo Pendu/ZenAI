@@ -5,6 +5,36 @@ A beautiful, modern website for ZenAI (zen-ai.eu) featuring:
 - 📞 **Consultation Booking** - Allow parents to book 1:1 video sessions
 - 📧 **Newsletter Signup** - Build your email list with a beautiful signup form
 - 📱 **Fully Responsive** - Looks great on all devices
+- 🚀 **CI/CD Pipeline** - Automatic deployment via GitHub Actions + Netlify
+
+## 🔄 CI/CD Setup (GitHub Actions + Netlify)
+
+### Step 1: Create Netlify Site
+1. Go to [netlify.com](https://netlify.com) and log in
+2. Click **"Add new site"** → **"Import an existing project"**
+3. Connect to GitHub and select the `Pendu/ZenAI` repository
+4. Deploy settings will auto-detect from `netlify.toml`
+5. Click **Deploy site**
+
+### Step 2: Get Netlify Credentials
+1. Go to your Netlify site dashboard
+2. **Site ID**: Go to **Site settings** → Copy the "Site ID" (looks like `abc123-def456-...`)
+3. **Auth Token**: Go to [User settings > Applications](https://app.netlify.com/user/applications) → **New access token** → Copy it
+
+### Step 3: Add GitHub Secrets
+1. Go to your repo: `github.com/Pendu/ZenAI/settings/secrets/actions`
+2. Click **"New repository secret"** and add:
+   - `NETLIFY_SITE_ID` = Your Site ID
+   - `NETLIFY_AUTH_TOKEN` = Your Access Token
+
+### Step 4: Connect Custom Domain
+1. In Netlify: **Domain settings** → **Add custom domain**
+2. Enter `zen-ai.eu`
+3. Follow DNS configuration instructions
+
+Now every push to `main` automatically deploys to production! 🎉
+
+---
 
 ## 🚀 Quick Start
 

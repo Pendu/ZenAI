@@ -1,0 +1,33 @@
+# GitHub Actions - Preview Deployments for Pull Requests
+# Creates preview URLs for pull requests before merging
+
+name: Preview Deploy
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  preview:
+    name: Deploy Preview
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Deploy Preview to Netlify
+        uses: nwtgck/actions-netlify@v3.0
+        with:
+          publish-dir: '.'
+          production-deploy: false
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: "Preview: PR #${{ github.event.pull_request.number }} - ${{ github.event.pull_request.title }}"
+          enable-pull-request-comment: true
+          overwrites-pull-request-comment: true
+          alias: preview-pr-${{ github.event.pull_request.number }}
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        timeout-minutes: 5
+
