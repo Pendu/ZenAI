@@ -1287,6 +1287,31 @@ em {
     margin-bottom: var(--space-lg);
 }
 
+/* About Credentials */
+.about-credentials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    margin-top: var(--space-xl);
+    margin-bottom: var(--space-lg);
+}
+
+.credential {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    background: white;
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-full);
+    font-size: var(--text-sm);
+    color: var(--color-graphite);
+    border: 1px solid var(--color-stone);
+}
+
+.credential-icon {
+    font-size: var(--text-base);
+}
+
 .about-signature {
     display: flex;
     align-items: center;
@@ -1304,6 +1329,11 @@ em {
     font-family: var(--font-display);
     font-style: italic;
     color: var(--color-primary);
+    transition: color var(--transition-fast);
+}
+
+.signature-text:hover {
+    color: var(--color-primary-dark);
 }
 
 
